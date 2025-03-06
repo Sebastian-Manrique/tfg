@@ -169,3 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+#The folder created for the photos
+img/*
+!.gitignore
+
