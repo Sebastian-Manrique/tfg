@@ -2,7 +2,7 @@ import cv2
 from pyzbar import pyzbar
 import os
 
-# Iniciar la captura de video desde la webcam (cambia 0 si tienes varias cámaras)
+# Iniciar la cámara
 cap = cv2.VideoCapture(0)
 
 # Verificar si la cámara se abrió correctamente
@@ -14,6 +14,7 @@ if not cap.isOpened():
 ret, frame = cap.read()
 
 if ret:
+    os.makedirs("img/leidas", exist_ok=True)  # Crear subcarpeta
 
     # Buscar el siguiente número disponible, para guardar la imagen
     contador = 1
@@ -26,7 +27,7 @@ if ret:
     # Guardar la imagen
     cv2.imwrite("img/foto.jpg", frame)
     os.rename("img/foto.jpg", nuevo_nombre)
-    print(f"Foto guardada como {nuevo_nombre}")
+    print(f"Foto guardada como foto{contador}.jpg")
 
     # Leer el código QR
     img = cv2.imread(nuevo_nombre)
@@ -42,9 +43,13 @@ if ret:
         cv2.putText(img, text, (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
+
+    nombre_leido = os.path.join("img/leidas", os.path.basename(nuevo_nombre))
+    cv2.imwrite(nombre_leido, img)
     cv2.imshow("foto", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    
 
 else:
     print("Error: No se pudo capturar la imagen")
