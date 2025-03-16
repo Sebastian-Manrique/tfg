@@ -1,36 +1,41 @@
 import cv2
 from pyzbar import pyzbar
+import sqlite3
 import os
 
-# Iniciar la cámara
+# Launch the camera
 cap = cv2.VideoCapture(0)
 
-# Verificar si la cámara se abrió correctamente
+# Verify if the camera was opened correctly
 if not cap.isOpened():
-    print("Error: No se pudo acceder a la cámara")
+    print("Error: Unable to access the camera")
     exit()
 
-# Capturar un solo fotograma
+# Cature a single frame
 ret, frame = cap.read()
 
 if ret:
-    os.makedirs("img/leidas", exist_ok=True)  # Crear subcarpeta
+    # Create the subfolder if it doesn't exist
+    os.makedirs("img/read", exist_ok=True)
 
-    # Buscar el siguiente número disponible, para guardar la imagen
-    contador = 1
-    while os.path.exists(os.path.join("img", f"foto{contador}.jpg")):
-        contador += 1
+    # Search for the next available number, to save the image
+    counter = 1
+    while os.path.exists(os.path.join("img", f"photo{counter}.jpg")):
+        counter += 1
 
-    # Nombre final de la nueva imagen
-    nuevo_nombre = os.path.join("img", f"foto{contador}.jpg")
+    # Final name of the new image
+    new_name = os.path.join("img", f"photo{counter}.jpg")
 
-    # Guardar la imagen
-    cv2.imwrite("img/foto.jpg", frame)
-    os.rename("img/foto.jpg", nuevo_nombre)
-    print(f"Foto guardada como foto{contador}.jpg")
+    # Save the image
+    cv2.imwrite("img/photo.jpg", frame)
+    os.rename("img/photo.jpg", new_name)
+    print(f"Photo save as photo{counter}.jpg")
 
-    # Leer el código QR
-    img = cv2.imread(nuevo_nombre)
+    # SQLite was used because it is simpler and nothing needs to be installed.
+    # A table called “codigos” was created with the fields “id” and “codigo”.
+
+    # Read the QR code
+    img = cv2.imread(new_name)
 
     barcodes = pyzbar.decode(img)
 
@@ -43,17 +48,23 @@ if ret:
         cv2.putText(img, text, (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-
-    nombre_leido = os.path.join("img/leidas", os.path.basename(nuevo_nombre))
-    cv2.imwrite(nombre_leido, img)
+    name_read = os.path.join("img/read", os.path.basename(new_name))
+    cv2.imwrite(name_read, img)
     cv2.imshow("foto", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
+
+    with sqlite3.connect("allCodes.db") as conn:
+        cursor = conn.cursor()
+        # Insert the code into the database
+        cursor.execute(
+            'INSERT INTO codes(code, type) VALUES(?, ?)', (bdata, btype))
+        conn.commit()
+
 
 else:
-    print("Error: No se pudo capturar la imagen")
+    print("Error: Unable to capture image")
 
-# Liberar la cámara
+# Release the camera
 cap.release()
 cv2.destroyAllWindows()

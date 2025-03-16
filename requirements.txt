@@ -1,0 +1,15 @@
+# pip install -r requirements.txt
+customtkinter==5.2.2
+darkdetect==0.8.0
+numpy==2.2.1
+opencv-python==4.11.0.86
+packaging==24.2
+pandas==2.2.3
+pillow==11.1.0
+python-dateutil==2.9.0.post0
+pytz==2024.2
+pyzbar==0.1.9
+setuptools==75.1.0
+six==1.17.0
+tzdata==2024.2
+wheel==0.44.0
