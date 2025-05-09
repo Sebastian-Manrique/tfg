@@ -1,0 +1,49 @@
+{% extends "template.html" %}
+{% block content %}
+
+<section class="status">
+    <h2>Estado de la máquina</h2>
+    <p><strong>Conexión:</strong>
+        {% if cameraBool %}
+        <span class="green">Activa</span>
+    </p>
+    {% else %}
+    <span class="red">Inactiva</span></p>
+    {% endif %}
+    <p><strong>Última actualización:</strong> 09/05/2025 12:30</p>
+</section>
+
+<section class="camera">
+    <h2>Video actual de la máquina</h2>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/IhchfhxvPKI?si=5Mb8-NUUAx_i8lXj"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</section>
+
+<section class="results">
+    <h2>Resultados recientes</h2>
+    {# Agarra el Python para ver los resultados. #}
+
+    <div class="scan-result">
+        Botella escaneada a las {{hora}} → <span class="green">Correcta</span>
+    </div>
+
+    <div class="scan-result">
+        Botella escaneada a las 12:28 → <span class="green">Correcta</span>
+    </div>
+    <div class="scan-result">
+        Botella escaneada a las 12:25 → <span class="yellow">Botella reconocida</span>
+    </div>
+    <div class="scan-result">
+        Botella escaneada a las 12:22 → <span class="green">Correcta</span>
+    </div>
+</section>
+
+<section class="controls">
+    <h2>Controles</h2>
+    <button class="btn" onclick="alert('Escaneo manual iniciado')">Iniciar escaneo manual</button>
+    <button class="btn" onclick="alert('Máquina reiniciada')">Reiniciar máquina</button>
+</section>
+
+{% endblock %}

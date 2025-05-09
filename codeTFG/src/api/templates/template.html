@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Escaneo de Botellas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+
+<body>
+    <header>
+        <h1>Backend de Escáner de Botellas</h1>
+
+        <div class="language-selector">
+            <a href="?lang=es">Español</a> | <a href="?lang=en">Inglés</a>
+        </div>
+
+    </header>
+
+    {% block content %}
+    {#Aqui va el codigo de las demas webs. #}
+    {% endblock %}
+
+</body>
+
+</html>
