@@ -24,4 +24,4 @@ def hello():
     camera_fun_flask = True
     return render_template("camera.html", hora=hora_fun_flask, cameraBool=camera_fun_flask)
 
-app.run(host="0.0.0.0", port=301, debug=True)
+app.run(host="0.0.0.0", port=5001, debug=True)

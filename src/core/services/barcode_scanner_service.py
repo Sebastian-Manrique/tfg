@@ -33,7 +33,6 @@ class BarcodeScannerService:
                             data_str = barcode.data.decode('utf-8')
                             btype = barcode.type
                             self.logger.info(f"Barcode detected: {data_str}")
-                            addBarcode(data_str, btype)
                             self.sound_player.play_sound()
 
                 if cv2.waitKey(1) == ord('q'):
