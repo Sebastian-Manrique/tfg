@@ -1,70 +1,89 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #008080;
-    color: white;
-    padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #008080;
+  color: white;
+  padding: 15px 20px;
 }
 
 .language-selector {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .language-selector a {
-    color: black;
-    text-decoration: none;
-    margin: 0 5px;
+  color: black;
+  text-decoration: none;
+  margin: 0 5px;
 }
 
 .language-selector a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.status, .results, .controls, .camera{
-    background: white;
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+.status,
+.results,
+.controls,
+.camera {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .btn {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #008080;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #008080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#video-stream {
+  display: block;
+  margin: auto;
+}
+
+#btnWatch {
+  min-width: 160px;
+  margin-bottom: 10px;
+}
+
+#icon-stream {
+  display: block;
+  margin: auto;
+  height: 480px;
 }
 
 .btn:hover {
-    background-color: #006666;
+  background-color: #006666;
 }
 
 .scan-result {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .green {
-    color: green;
+  color: green;
 }
 
 .red {
-    color: red;
+  color: red;
 }
 .yellow {
-    color:rgb(197, 200, 0);
+  color: rgb(197, 200, 0);
 }

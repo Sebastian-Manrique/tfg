@@ -1,8 +1,19 @@
 {% extends "template.html" %}
+
+<head>
+    {% block title %}
+    <title>{{lang.get('title')}}</title>
+    {% endblock %}
+</head>
+
+{% block header %}
+<h1>{{lang.get('title')}}</h1>
+{% endblock %}
+
 {% block content %}
 
 <section class="status">
-    <h2>Estado de la máquina</h2>
+    <h2>{{lang.get('status')}}</h2>
     <p><strong>Conexión:</strong>
         {% if cameraBool %}
         <span class="green">Activa</span>
@@ -14,11 +25,13 @@
 </section>
 
 <section class="camera">
-    <h2>Video actual de la máquina</h2>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/IhchfhxvPKI?si=5Mb8-NUUAx_i8lXj"
-        title="YouTube video player" frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <h2> {{lang.get('video_actual')}} </h2>
+    <button class="btn" id="btnWatch" onclick="toggleVideo()">{{lang.get('ver_camara')}}</button>
+    <div>
+        <!-- Only visible if the camera is the button is pressed -->
+        <img src="{{ url_for('camera_stream') }}" id="video-stream" alt="video-from-camera" style="display: none;">
+        <img src="{{ url_for('static', filename='img/camera.png') }}" id="icon-stream" alt="icon-for-camera">
+    </div>
 </section>
 
 <section class="results">
@@ -42,8 +55,11 @@
 
 <section class="controls">
     <h2>Controles</h2>
-    <button class="btn" onclick="alert('Escaneo manual iniciado')">Iniciar escaneo manual</button>
-    <button class="btn" onclick="alert('Máquina reiniciada')">Reiniciar máquina</button>
+    <a href="/video">
+        <button class="btn">Iniciar escaneo manual</button>
+    </a>
+
+    <button class="btn" onclick="restart()">Reiniciar máquina</button>
 </section>
 
 {% endblock %}
