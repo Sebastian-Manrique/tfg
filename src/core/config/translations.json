@@ -1,0 +1,36 @@
+{
+    "es": {
+        "title": "Backend de escáner de botellas",
+        "status": "Estado de la máquina",
+        "manual_scan": "Iniciar escaneo manual",
+        "video_actual": "Video actual de la cámara",
+        "ver_camara": "Ver cámara en línea",
+        "restart": "Reiniciar máquina",
+        "conexion": "Conexión",
+        "activa": "Activa",
+        "inactiva": "Inactiva",
+        "ultima_actualizacion": "Última actualización",
+        "resultados_recientes": "Resultados recientes",
+        "botella_escaneada": "Botella escaneada a las",
+        "correcta": "Correcta",
+        "reconocida": "Botella reconocida",
+        "controles": "Controles"
+    },
+    "en": {
+        "title": "Bottle scanner backend",
+        "status": "Machine Status",
+        "manual_scan": "Start manual scan",
+        "video_actual": "Current camera video",
+        "ver_camara": "View camera online",
+        "restart": "Restart machine",
+        "conexion": "Connection",
+        "activa": "Active",
+        "inactiva": "Inactive",
+        "ultima_actualizacion": "Last update",
+        "resultados_recientes": "Recent results",
+        "botella_escaneada": "Bottle scanned at",
+        "correcta": "Correct",
+        "reconocida": "Bottle recognized",
+        "controles": "Controls"
+    }
+}

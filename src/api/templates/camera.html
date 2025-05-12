@@ -14,14 +14,14 @@
 
 <section class="status">
     <h2>{{lang.get('status')}}</h2>
-    <p><strong>Conexión:</strong>
+    <p><strong>{{lang.get('status')}}:</strong>
         {% if cameraBool %}
-        <span class="green">Activa</span>
+        <span class="green">{{lang.get('activa')}}</span>
     </p>
     {% else %}
-    <span class="red">Inactiva</span></p>
+    <span class="red">{{lang.get('inactiva')}}</span></p>
     {% endif %}
-    <p><strong>Última actualización:</strong> 09/05/2025 12:30</p>
+    <p><strong>{{lang.get('ultima_actualizacion')}}:</strong> 09/05/2025 12:30</p>
 </section>
 
 <section class="camera">
@@ -35,31 +35,29 @@
 </section>
 
 <section class="results">
-    <h2>Resultados recientes</h2>
+    <h2>{{lang.get('resultados_recientes')}}</h2>
     {# Agarra el Python para ver los resultados. #}
 
     <div class="scan-result">
-        Botella escaneada a las {{hora}} → <span class="green">Correcta</span>
+        {{lang.get('botella_escaneada')}} {{hora}} → <span class="green"> {{lang.get('correcta')}}</span>
     </div>
 
     <div class="scan-result">
-        Botella escaneada a las 12:28 → <span class="green">Correcta</span>
+        {{lang.get('botella_escaneada')}} 12:28 → <span class="green"> {{lang.get('correcta')}}</span>
     </div>
     <div class="scan-result">
-        Botella escaneada a las 12:25 → <span class="yellow">Botella reconocida</span>
+        {{lang.get('botella_escaneada')}} 12:25 → <span class="yellow"> {{lang.get('reconocida')}}</span>
     </div>
     <div class="scan-result">
-        Botella escaneada a las 12:22 → <span class="green">Correcta</span>
+        {{lang.get('botella_escaneada')}} 12:22 → <span class="green"> {{lang.get('correcta')}}</span>
     </div>
 </section>
 
 <section class="controls">
-    <h2>Controles</h2>
-    <a href="/video">
-        <button class="btn">Iniciar escaneo manual</button>
-    </a>
+    <h2>{{lang.get('controles')}}</h2>
+    <button class="btn" onclick="location.href = '/video';" id="bottom-btn"> {{lang.get('manual_scan')}}</button>
 
-    <button class="btn" onclick="restart()">Reiniciar máquina</button>
+    <button class="btn" onclick="restart()" id="bottom-btn">{{lang.get('restart')}}</button>
 </section>
 
 {% endblock %}

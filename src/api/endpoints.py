@@ -1,38 +1,34 @@
+from pathlib import Path
 from flask import Flask, render_template, Response, jsonify, after_this_request
 import cv2
+import json
+import threading
+
 
 app = Flask(__name__)
 
-translations = {
-    'es': {
-        'title': 'Backend de Escáner de Botellas',
-        'status': 'Estado de la máquina',
-        'manual_scan': 'Iniciar escaneo manual',
-        'video_actual': 'Video actual de la cámara',
-        'ver_camara': 'Ver cámara en linea',
-        'restart': 'Reiniciar máquina',
-    },
-    'en': {
-        'title': 'Bottle Scanner Backend',
-        'status': 'Machine Status',
-        'manual_scan': 'Start Manual Scan',
-        'video_actual': 'Actual camera video',
-        'ver_camara': 'View camera online',
-        'restart': 'Restart Machine',
-    }
-}
+# This is for the restart thread button
+camera = None
+camera_thread = None
 
-camera = cv2.VideoCapture(0)  # Open the default camera (0)
+
+p = Path('.')
+
+with open(p / 'src/core/config/translations.json', 'r',  encoding='utf-8') as f:
+    translations = json.load(f)
 
 
 def camera_frames():
+    global camera
+    camera = cv2.VideoCapture(0)  # Open the default camera (0)
+
     while True:
         isEnable, frame = camera.read()
         if not isEnable:
             print("Failed to capture image")
             break
         else:
-            # Encode the frame as JPEG
+            # Encode the frame as JPG
             response, jpeg = cv2.imencode('.jpg', frame)
             frame = jpeg.tobytes()
 
@@ -61,7 +57,20 @@ def camera_stream():
 
 @app.route('/restart-camera', methods=['POST'])
 def restart():
-    camera.release()
+    global camera, camera_thread
+
+    # Detiene el bucle actual
+    if camera:
+        camera.release()
+
+    # Espera a que el hilo anterior finalice (opcional)
+    if camera_thread and camera_thread.is_alive():
+        camera_thread.join(timeout=2)
+
+    # Reinicia en un nuevo hilo (no bloquea Flask)
+    camera_thread = threading.Thread(target=camera_frames, daemon=True)
+    camera_thread.start()
+
     return jsonify({"status": "Camera restarted"})
 
 

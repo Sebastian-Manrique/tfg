@@ -1,6 +1,6 @@
 # Trabajo de Fin de Grado
 <p align="center">
-    <img src="https://skillicons.dev/icons?i=git,python,raspberrypi,opencv,linux,sqlite" />
+    <img src="https://skillicons.dev/icons?i=git,python,raspberrypi,opencv,linux,flask,sqlite" />
 </p>
 
 ## Español

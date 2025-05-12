@@ -21,5 +21,8 @@ function restart() {
     method: "POST",
   })
     .then((response) => response.json())
-    .then((json) => console.log(json));
+    .then((json) => {
+      location.reload();
+      console.log(json)
+    });
 }
