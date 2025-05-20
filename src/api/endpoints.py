@@ -22,7 +22,7 @@ def camera_frames():
     global camera
     camera = cv2.VideoCapture(0)  # Open the default camera (0)
 
-    while True:
+    while  camera.isOpened():
         isEnable, frame = camera.read()
         if not isEnable:
             print("Failed to capture image")
@@ -59,15 +59,15 @@ def camera_stream():
 def restart():
     global camera, camera_thread
 
-    # Detiene el bucle actual
+    # Stops the actual loop
     if camera:
         camera.release()
 
-    # Espera a que el hilo anterior finalice (opcional)
+    # Wait for the previous thread to end (optional)
     if camera_thread and camera_thread.is_alive():
         camera_thread.join(timeout=2)
 
-    # Reinicia en un nuevo hilo (no bloquea Flask)
+    # Reboot on a new thread (does not lock Flask)
     camera_thread = threading.Thread(target=camera_frames, daemon=True)
     camera_thread.start()
 
