@@ -55,7 +55,10 @@
 
 <section class="controls">
     <h2>{{lang.get('controles')}}</h2>
-    <button class="btn" onclick="location.href = '/video';" id="bottom-btn"> {{lang.get('manual_scan')}}</button>
+    <button class="btn" onclick="location.href = '/video';" id="bottom-btn"> {{lang.get('see_fullscreen')}}</button>
+
+    <button class="btn" onclick="manualScan()" id="bottom-btn"> {{lang.get('manual_scan')}}</button>
+
 
     <button class="btn" onclick="restart()" id="bottom-btn">{{lang.get('restart')}}</button>
 </section>

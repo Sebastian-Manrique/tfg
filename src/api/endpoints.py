@@ -22,7 +22,7 @@ def camera_frames():
     global camera
     camera = cv2.VideoCapture(0)  # Open the default camera (0)
 
-    while  camera.isOpened():
+    while camera.isOpened():
         isEnable, frame = camera.read()
         if not isEnable:
             print("Failed to capture image")
@@ -48,6 +48,11 @@ def index_en():
     hour_fun_flask = "12:79"
     camera_fun_flask = True
     return render_template("camera.html", hora=hour_fun_flask, cameraBool=camera_fun_flask, lang=translations['en'])
+
+
+@app.route('/manual-scan', methods=['POST'])
+def manual_scan():
+    return jsonify({"status": "El escaneo ya está en curso."})
 
 
 @app.route('/video')

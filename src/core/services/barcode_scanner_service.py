@@ -3,7 +3,6 @@ from pyzbar.pyzbar import decode
 from src.core.utils.sound_player import SoundPlayer
 from src.core.exceptions.exceptions import BusinessException
 from src.core.logging.logger import Logger
-from src.core.utils.add_to_bdd import addBarcode
 
 
 class BarcodeScannerService:

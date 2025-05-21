@@ -14,7 +14,8 @@
         "botella_escaneada": "Botella escaneada a las",
         "correcta": "Correcta",
         "reconocida": "Botella reconocida",
-        "controles": "Controles"
+        "controles": "Controles",
+        "see_fullscreen": "Ver en pantalla completa"
     },
     "en": {
         "title": "Bottle scanner backend",
@@ -31,6 +32,8 @@
         "botella_escaneada": "Bottle scanned at",
         "correcta": "Correct",
         "reconocida": "Bottle recognized",
-        "controles": "Controls"
+        "controles": "Controls",
+        "see_fullscreen": "See on full screen"
+
     }
 }
