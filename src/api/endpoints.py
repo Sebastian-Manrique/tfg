@@ -1,82 +1,81 @@
-from pathlib import Path
-from flask import Flask, render_template, Response, jsonify, after_this_request
+import os
+from flask import Flask, render_template, Response, jsonify
+from src.core.utils.yolo_service import detect_objects
+from src.core.services.barcode_scanner_service import BarcodeScannerService
+from src.core.utils.sound_player import SoundPlayer
+from src.core.logging.logger import Logger
+from src.core.config.config import Config
+
+config = Config()
+logger = Logger(config)
+sound_path = os.path.join(os.path.dirname(__file__), '..', '..', 'sound', 'beep.wav')
+sound_path = os.path.abspath(sound_path)
+
+sound_player = SoundPlayer(sound_file=sound_path, logger=logger)
+
+barcode_service = BarcodeScannerService(sound_player, logger, image_output="output.jpg")
+
 import cv2
-import json
 import threading
+from pathlib import Path
+import json
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.join(os.path.dirname(__file__), "templates")
+static_dir = os.path.join(os.path.dirname(__file__), "static")
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
-# This is for the restart thread button
 camera = None
 camera_thread = None
 
-
+# Cargar traducciones
 p = Path('.')
-
-with open(p / 'src/core/config/translations.json', 'r',  encoding='utf-8') as f:
+with open(p / 'src/core/config/translations.json', 'r', encoding='utf-8') as f:
     translations = json.load(f)
 
 
-def camera_frames():
+def camera_frames(mode='opencv'):
     global camera
-    camera = cv2.VideoCapture(0)  # Open the default camera (0)
+    camera = cv2.VideoCapture(0)
 
     while camera.isOpened():
-        isEnable, frame = camera.read()
-        if not isEnable:
-            print("Failed to capture image")
+        ret, frame = camera.read()
+        if not ret:
             break
-        else:
-            # Encode the frame as JPG
-            response, jpeg = cv2.imencode('.jpg', frame)
-            frame = jpeg.tobytes()
+
+        if mode == 'yolo':
+            frame = detect_objects(frame)
+        elif mode == 'opencv':
+            frame = barcode_service.process_frame(frame)
+        elif mode == 'raw':
+            pass  # No se modifica la imagen
+
+        ret, jpeg = cv2.imencode('.jpg', frame)
+        frame = jpeg.tobytes()
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
+
 @app.route('/')
 def index():
-    hour_fun_flask = "12:79"
-    camera_fun_flask = True
-    return render_template("camera.html", hora=hour_fun_flask, cameraBool=camera_fun_flask, lang=translations['es'])
+    return render_template("camera.html", hora="12:00", cameraBool=True, lang=translations['es'])
 
 
-@app.route('/en')
-def index_en():
-    hour_fun_flask = "12:79"
-    camera_fun_flask = True
-    return render_template("camera.html", hora=hour_fun_flask, cameraBool=camera_fun_flask, lang=translations['en'])
-
-
-@app.route('/manual-scan', methods=['POST'])
-def manual_scan():
-    return jsonify({"status": "El escaneo ya está en curso."})
-
-
-@app.route('/video')
-def camera_stream():
-    return Response(camera_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video/<mode>')
+def video_feed(mode):
+    if mode not in ['yolo', 'opencv']:
+        return "Modo no soportado", 400
+    return Response(camera_frames(mode=mode), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/restart-camera', methods=['POST'])
-def restart():
-    global camera, camera_thread
-
-    # Stops the actual loop
-    if camera:
-        camera.release()
-
-    # Wait for the previous thread to end (optional)
-    if camera_thread and camera_thread.is_alive():
-        camera_thread.join(timeout=2)
-
-    # Reboot on a new thread (does not lock Flask)
-    camera_thread = threading.Thread(target=camera_frames, daemon=True)
-    camera_thread.start()
-
+def restart_camera():
     return jsonify({"status": "Camera restarted"})
 
 
-app.run(host="0.0.0.0", port=5001, debug=True)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5001, debug=True)

@@ -27,10 +27,21 @@ function restart() {
     });
 }
 
-function manualScan() {
-  fetch("/manual-scan", { method: "POST" })
-   .then((response) => response.json())
-    .then((json) => {
-      console.log(json);
-    });
+var mode = "";
+function scanMode(mode) {
+  if (mode == "yolo") {
+    fetch("/video/yolo", { method: "POST" })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      });
+  } else {
+    fetch("/video/opencv", { method: "POST" })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      });
+  }
+
+  // Calling the differents modes from the save fetch.
 }

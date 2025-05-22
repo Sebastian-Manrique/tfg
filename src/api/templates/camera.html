@@ -25,14 +25,29 @@
 </section>
 
 <section class="camera">
-    <h2> {{lang.get('video_actual')}} </h2>
-    <button class="btn" id="btnWatch" onclick="toggleVideo()">{{lang.get('ver_camara')}}</button>
-    <div>
-        <!-- Only visible if the camera is the button is pressed -->
-        <img src="{{ url_for('camera_stream') }}" id="video-stream" alt="video-from-camera" style="display: none;">
-        <img src="{{ url_for('static', filename='img/camera.png') }}" id="icon-stream" alt="icon-for-camera">
-    </div>
+    <h2>{{lang.get('video_actual')}}</h2>
+
+    <label for="mode-select">Modo de cámara:</label>
+    <select id="mode-select">
+        <option value="video">Cámara sin procesar</option>
+        <option value="video/opencv">Detección con OpenCV</option>
+        <option value="video/yolo">Detección con YOLO</option>
+    </select>
+
+    <br><br>
+    <img src="/video" id="video-stream" width="640">
 </section>
+
+<script>
+    const select = document.getElementById('mode-select');
+    const video = document.getElementById('video-stream');
+
+    select.addEventListener('change', function () {
+        const newSrc = '/' + this.value;
+        video.src = newSrc;
+    });
+</script>
+
 
 <section class="results">
     <h2>{{lang.get('resultados_recientes')}}</h2>
@@ -56,9 +71,6 @@
 <section class="controls">
     <h2>{{lang.get('controles')}}</h2>
     <button class="btn" onclick="location.href = '/video';" id="bottom-btn"> {{lang.get('see_fullscreen')}}</button>
-
-    <button class="btn" onclick="manualScan()" id="bottom-btn"> {{lang.get('manual_scan')}}</button>
-
 
     <button class="btn" onclick="restart()" id="bottom-btn">{{lang.get('restart')}}</button>
 </section>
