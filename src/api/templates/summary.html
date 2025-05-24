@@ -1,0 +1,27 @@
+{% extends "template.html" %}
+
+<head>
+    {% block title %}
+    <title>title</title>
+    {% endblock %}
+</head>
+
+{% block header %}
+<h1>title</h1>
+{% endblock %}
+
+{% block content %}
+
+<h1>🧾 summary del escaneo</h1>
+<p><strong>Botellas de plástico:</strong> {{ summary.plastics_bottles }}</p>
+<p><strong>Latas de aluminio:</strong> {{ summary.aluminum_cans }}</p>
+<p><strong>Descuento total:</strong> {{ summary.descuento_total_centimos }} céntimos</p>
+
+{% if not usado %}
+<form method="POST">
+    <button type="submit">✅ Canjear Cupón</button>
+</form>
+{% else %}
+<p style="color: green;">¡Cupón canjeado con éxito!</p>
+{% endif %}
+{% endblock %}

@@ -6,7 +6,7 @@ from src.core.utils.file_utils import FileUtils
 class FileRepository:
 
     def __init__(self, logger: Logger, file_utils: FileUtils):
-        self.logger = logger.get_logger()
+        self.logger = logger
         self.file_utils = file_utils
 
     def get_content_file(self, file_path: str) -> str:

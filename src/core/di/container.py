@@ -6,6 +6,9 @@ from src.core.repository.file_repository import FileRepository
 from src.core.utils.file_utils import FileUtils
 from src.core.utils.sound_player import SoundPlayer
 from src.core.services.barcode_scanner_service import BarcodeScannerService
+from src.core.repository.code_repository import CodeRepository
+
+
 
 
 class Container(containers.DeclarativeContainer):
@@ -18,6 +21,12 @@ class Container(containers.DeclarativeContainer):
         SoundPlayer,
         logger=logger,
         sound_file="sound/beep.wav"
+    )
+    
+    code_repository = providers.Singleton(
+    CodeRepository,
+    db_path="src/core/database/allCodes.db",
+    logger=logger
     )
 
     barcode_scanner = providers.Factory(
