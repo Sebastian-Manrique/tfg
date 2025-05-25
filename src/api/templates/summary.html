@@ -2,26 +2,27 @@
 
 <head>
     {% block title %}
-    <title>title</title>
+    <title>{{lang.get('title')}}</title>
     {% endblock %}
 </head>
 
 {% block header %}
-<h1>title</h1>
+<h1>{{lang.get('title')}}</h1>
 {% endblock %}
 
 {% block content %}
 
-<h1>🧾 summary del escaneo</h1>
-<p><strong>Botellas de plástico:</strong> {{ summary.plastics_bottles }}</p>
-<p><strong>Latas de aluminio:</strong> {{ summary.aluminum_cans }}</p>
-<p><strong>Descuento total:</strong> {{ summary.descuento_total_centimos }} céntimos</p>
+<h1>{{ lang.cupon_titulo }}</h1>
+<p><strong>{{ lang.cupon_hora }}:</strong> {{ hora }}</p>
+<p><strong>{{ lang.cupon_id }}:</strong> {{ id }}</p>
+<p><strong>{{ lang.cupon_botellas_plastico }}:</strong> {{ summary.plastics_bottles }}</p>
+<p><strong>{{ lang.cupon_latas_aluminio }}:</strong> {{ summary.aluminum_cans }}</p>
+<p><strong>{{ lang.cupon_descuento_total }}:</strong> {{ summary.descuento_total_euros }} €</p>
 
 {% if not usado %}
-<form method="POST">
-    <button type="submit">✅ Canjear Cupón</button>
-</form>
+<button onclick="markUseDiscount('{{ id }}')">{{ lang.cupon_btn_canjear }}</button>
 {% else %}
-<p style="color: green;">¡Cupón canjeado con éxito!</p>
+<p style="color: green;">{{ lang.cupon_ya_canjeado }}</p>
 {% endif %}
+
 {% endblock %}

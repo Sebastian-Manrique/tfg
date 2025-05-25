@@ -5,7 +5,7 @@ from src.core.logging.logger import Logger
 
 
 class SoundPlayer:
-    def __init__(self, sound_file: str, logger: Logger):
+    def __init__(self, sound_file: str, logger: None):
         self.logger = logger
         try:
             self.sound_file = sound_file

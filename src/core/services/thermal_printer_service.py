@@ -1,10 +1,15 @@
 from escpos.printer import Serial
-from datetime import datetime
+from datetime import datetime, timedelta
 from src.core.repository.code_repository import CodeRepository
 
 
 class ThermalPrinterService:
-    def __init__(self, printer: Serial = None, logger=None, code_repository: CodeRepository = None):
+    def __init__(
+        self,
+        printer: Serial = None,
+        logger=None,
+        code_repository: CodeRepository = None,
+    ):
         """
         Service that manages coupon printing using ESC/POS printer.
         """
@@ -32,7 +37,10 @@ class ThermalPrinterService:
 
         ip = self.code_repository._CodeRepository__get_local_ip_from_shell()
         url = f"http://{ip}:5001/summary/{summary_id}"
-        euros = summary.get("descuento_total_centimos", 0) / 100
+        euros = summary.get("descuento_total_euros", 0)
+        hora_actual = summary.get("hora") or (
+            datetime.now() + timedelta(hours=1)
+        ).strftime("%Y-%m-%d %H:%M:%S")
 
         try:
             if not self.printer:
@@ -40,21 +48,31 @@ class ThermalPrinterService:
                 print(self.center_text(""))
                 print(self.center_text("Escanea o visita:"))
                 print(url)
+                print(self.center_text("Hora: " + hora_actual))
+
             else:
                 self.printer.text("\n")
                 self.printer.text(self.center_text("DISCOUNT OVERVIEW"))
-                self.printer.text(self.center_text(
-                    f"Scan or visit: {url}") + "\n")
+                self.printer.text(self.center_text("Scan or visit:\n"))
+                self.printer.text(self.center_text(f"{url}"))
+                self.printer.text(
+                    self.center_text(f"Plastic bottles: {summary['plastics_bottles']}")
+                )
+                self.printer.text(
+                    self.center_text(f"Aluminium cans: {summary['aluminum_cans']}")
+                )
+                self.printer.text(
+                    self.center_text(self.center_text(f"Cents: {euros:.2f} EUR"))
+                )
+                self.printer.text(self.center_text("Hora: " + hora_actual))
                 self.printer.qr(url, size=9)
                 self.printer.text("\n")
-                self.printer.text(self.center_text(
-                    f"Total discount: {euros:.2f} €"))
-                self.printer.text("\n")
-                self.printer._raw(b"\x1B\x40")  # Reset
+                self.printer._raw(b"\x1b\x40")  # Reset
 
             if self.logger:
                 self.logger.info(
-                    f"Printed resumen con {summary['plastics_bottles']} botellas, {summary['aluminum_cans']} latas y {euros:.2f} €")
+                    f"Printed resumen con {summary['plastics_bottles']} botellas, {summary['aluminum_cans']} latas y {euros:.2f} €"
+                )
 
         except Exception as e:
             if self.logger:

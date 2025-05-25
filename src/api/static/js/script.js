@@ -45,3 +45,18 @@ function scanMode(mode) {
 
   // Calling the differents modes from the save fetch.
 }
+
+function markUseDiscount(summaryId) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const lang = urlParams.get("lang") || "es";
+
+  fetch(`/summary/${summaryId}?lang=${lang}`, { method: "POST" })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        location.reload();
+      } else {
+        alert("Error al canjear el cupón.");
+      }
+    });
+}

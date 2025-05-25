@@ -1,3 +1,4 @@
+from src.core.utils import shared_flags
 import RPi.GPIO as GPIO
 import threading
 import time
@@ -6,8 +7,9 @@ CAM_LED = 17
 SCAN_LED = 27
 BUTTON_GPIO = 22  # o 26 si quieres usar el original
 
+
 class HardwareController:
-    def __init__(self):
+    def __init__(self, on_button_press=None):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
@@ -16,15 +18,22 @@ class HardwareController:
         GPIO.setup(BUTTON_GPIO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         self.scanning = True
-        self._start_button_listener()
+        self._start_button_listener(on_button_press)
 
-    def _start_button_listener(self):
+    def _start_button_listener(self, on_button_press=None):
         def check_button():
+            button_previously_pressed = False
             while self.scanning:
                 if GPIO.input(BUTTON_GPIO) == GPIO.LOW:
-                    print("Button pressed, stopping scanning...")
-                    self.scanning = False
-                    break
+                    if not button_previously_pressed:
+                        button_previously_pressed = True
+
+                        shared_flags.button_pressed_after_detection = True
+
+                        if on_button_press:
+                            on_button_press()
+                else:
+                    button_previously_pressed = False
                 time.sleep(0.1)
 
         threading.Thread(target=check_button, daemon=True).start()

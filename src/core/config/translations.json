@@ -16,7 +16,15 @@
         "correcta": "Correcta",
         "reconocida": "Botella reconocida",
         "controles": "Controles",
-        "see_fullscreen": "Ver en pantalla completa"
+        "see_fullscreen": "Ver en pantalla completa",
+        "cupon_titulo": "🧾 Descuento total",
+        "cupon_id": "Id",
+        "cupon_botellas_plastico": "Botellas de plástico",
+        "cupon_latas_aluminio": "Latas de aluminio",
+        "cupon_descuento_total": "Descuento total",
+        "cupon_btn_canjear": "✅ Canjear Cupón",
+        "cupon_ya_canjeado": "¡Cupón canjeado con éxito!",
+        "cupon_hora": "Hora del cupón"
     },
     "en": {
         "title": "Bottle scanner backend",
@@ -35,7 +43,14 @@
         "correcta": "Correct",
         "reconocida": "Bottle recognized",
         "controles": "Controls",
-        "see_fullscreen": "See on full screen"
-
+        "see_fullscreen": "See on full screen",
+        "cupon_titulo": "🧾 Total discount",
+        "cupon_id": "Id",
+        "cupon_botellas_plastico": "Plastic bottles",
+        "cupon_latas_aluminio": "Aluminum cans",
+        "cupon_descuento_total": "Total discount",
+        "cupon_btn_canjear": "✅ Redeem Coupon",
+        "cupon_ya_canjeado": "Coupon successfully redeemed!",
+        "cupon_hora": "Coupon time"
     }
 }

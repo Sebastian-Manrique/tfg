@@ -2,6 +2,7 @@ from datetime import datetime
 import cv2
 import hashlib
 import numpy as np
+from datetime import datetime, timedelta
 import time
 import json
 from pathlib import Path
@@ -13,6 +14,9 @@ from src.core.logging.logger import Logger
 from src.core.repository.code_repository import CodeRepository
 from src.core.repository.file_repository import FileRepository
 
+# For the discont price
+from src.core.config.config import Config
+
 
 class BarcodeScannerService:
     def __init__(
@@ -22,7 +26,7 @@ class BarcodeScannerService:
         image_output: str,
         code_repository: CodeRepository,
         file_repository: FileRepository,
-        thermal_printer_service=None
+        thermal_printer_service=None,
     ):
         self.sound_player = sound_player
         self.logger = logger.get_logger()
@@ -31,10 +35,18 @@ class BarcodeScannerService:
         self.file_repository = file_repository
         self.last_summary = None
         self.thermal_printer_service = thermal_printer_service
-        self.hardware = HardwareController()
+        self.hardware = HardwareController(on_button_press=self._on_button_pressed)
         self.last_scanned = {"code": None, "time": 0}
         self.codes_scanned = []
         self.material_codes = self._load_material_codes()
+
+    def _on_button_pressed(self):
+        if not self.codes_scanned:
+            self.logger.info("Button pressed, but no codes. Ignoring.")
+            return  # Do nothing
+
+        self.logger.info("Button pressed: generating summary.")
+        self.hardware.scanning = False
 
     def _load_material_codes(self):
         try:
@@ -56,9 +68,11 @@ class BarcodeScannerService:
                     btype = barcode.type
                     now = time.time()
 
-                    if self.last_scanned["code"] == data_str and (now - self.last_scanned["time"]) < 3:
-                        self.logger.info(
-                            f"Duplicate barcode ignored: {data_str}")
+                    if (
+                        self.last_scanned["code"] == data_str
+                        and (now - self.last_scanned["time"]) < 3
+                    ):
+                        self.logger.info(f"Duplicate barcode ignored: {data_str}")
                         continue
 
                     self.last_scanned = {"code": data_str, "time": now}
@@ -102,34 +116,47 @@ class BarcodeScannerService:
             elif code in aluminum_codes:
                 aluminum_count += 1
 
-        discount_per_plastic = 5  # céntimos
-        discount_per_aluminum = discount_per_plastic * 1.5
+        discount_per_plastic = Config.DISCOUNT_PLASTIC
+        discount_per_aluminum = Config.DISCOUNT_ALUMINUM
 
-        total_discount = (plastic_count * discount_per_plastic) + \
-            (aluminum_count * discount_per_aluminum)
+        total_discount_centimos = (
+            plastic_count * discount_per_plastic
+            + aluminum_count * discount_per_aluminum
+        )
 
-        # Generar resumen_id único
+        # Generate summary_id unique
         joined_codes = "".join(self.codes_scanned)
-        resumen_id = hashlib.sha256(joined_codes.encode()).hexdigest()[:8]
+        now_str = datetime.now().isoformat()
+
+        hash_input = f"{joined_codes}{now_str}"
+        summary_id = hashlib.sha256(hash_input.encode()).hexdigest()[:8]
 
         summary = {
             "plastics_bottles": plastic_count,
             "aluminum_cans": aluminum_count,
-            "descuento_total_centimos": round(total_discount, 2)
+            "descuento_total_centimos": total_discount_centimos,
+            "descuento_total_euros": round(total_discount_centimos / 100, 2),
         }
 
         print("\n🧾 Resumen del escaneo:")
         print(json.dumps(summary, indent=2, ensure_ascii=False))
 
         if self.thermal_printer_service:
-            self.thermal_printer_service.print_summary_coupon(
-                resumen_id, summary)
+            self.thermal_printer_service.print_summary_coupon(summary_id, summary)
+
+        hora_actual = (datetime.now() + timedelta(hours=1)).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         # Save the summary if requested via web
         self.last_summary = {
-            "id": resumen_id,
+            "id": summary_id,
             "codes": list(self.codes_scanned),
-            "summary": summary
+            "summary": summary,
+            "hora": hora_actual,
+            "used": False,
         }
+        
+        self.hardware.camera_off()
 
         return summary

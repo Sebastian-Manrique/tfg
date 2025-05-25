@@ -16,8 +16,14 @@
 
 
         <div class="language-selector">
+            {% if request.endpoint == 'resumen' %}
+            <a href="{{ url_for('resumen', summary_id=id, lang='es') }}">Español</a> |
+            <a href="{{ url_for('resumen', summary_id=id, lang='en') }}">Inglés</a>
+            {% else %}
             <a href="/">Español</a> | <a href="/en">Inglés</a>
+            {% endif %}
         </div>
+
 
     </header>
 

@@ -6,8 +6,11 @@ class Config:
     _instance = None
     _lock = Lock()
 
-    LOG_LEVEL = 'LOG_LEVEL'
-    LOG_FORMAT = 'LOG_FORMAT'
+    LOG_LEVEL = "LOG_LEVEL"
+    LOG_FORMAT = "LOG_FORMAT"
+
+    DISCOUNT_PLASTIC = 5
+    DISCOUNT_ALUMINUM = 7
 
     def __new__(cls):
         with cls._lock:
@@ -17,7 +20,7 @@ class Config:
         return cls._instance
 
     def _initialize(self):
-        if not hasattr(self, 'environ_dict'):
+        if not hasattr(self, "environ_dict"):
             self.environ_dict = {}
 
     def get_env_var(self, var_name, default_value=None):
